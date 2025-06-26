@@ -29,6 +29,8 @@ def import_pep_IDs(PATH, filtering=False, drop_contaminants=True):
                                      'group_qval',
                                     'custom_q']
                     )
+    if drop_contaminants:
+        df = df[df.isCanonical!='Contam'].copy(deep=True)
 
     if filtering=='global':
         df = df[df['q.value']<0.01].copy(deep=True)
@@ -36,13 +38,19 @@ def import_pep_IDs(PATH, filtering=False, drop_contaminants=True):
         df = df[df.group_qval<0.01].copy(deep=True)
     elif filtering=='custom':
         df = df[df.custom_q<0.01].copy(deep=True)
+    elif filtering=='hybrid':
+        tmp = []
+        for pippo,pluto in df.groupby('isCanonical').__iter__():
+            if pippo=='Canonical':
+                tmp.append(pluto[pluto['q.value']<0.01])
+            elif pippo=='NonCanonical':
+                tmp.append(pluto[pluto.custom_q<0.01])
+        df = pd.concat(tmp, ignore_index=True)
+        del tmp
     elif filtering: 
         # gives error if filtering is not False
         print(f'Error! Filtering = {filtering}')
         return filtering
-
-    if drop_contaminants:
-        df = df[df.isCanonical!='Contam'].copy(deep=True)
 
     # fixes issue with some files being .RAW and other being .raw
     df.spectrum_file = df.spectrum_file.apply(lambda x: x.split('.')[0])
