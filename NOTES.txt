@@ -1,0 +1,26 @@
+2024/11/04 - Enrico
+There was a problem with the headers of the OpenProt database. This has been fixed, but I had to rerun the openprot search. 
+The fix = rewriting the header in the ">op|{uniacc}|{uniacc} ..."
+It was ">op|{uniacc}|{taxon} ..." and ionbot interpreted the taxon (the word immediately after "|") as the protein entry during parsing.
+All information is still present in the header, I only wrote the uniprot accession twice.
+
+2024/11/04 - Enrico
+Minor issue with the "spectrum titles" in PXD014258.
+Some mgf files (converted with old ThermoRawPerser version??) include the filename in the spectrum title. 
+The ones I converted myself do not.
+
+2024/11/12
+Calculated group-wise FDR and shared with Valeriia.
+I also renamed a few files: the original "combined-filtered-results" files are now just "combined-results"
+(the "filtered" tag was a leftover from an old script)
+
+2024/12/09
+Big change in the classification of peptides.
+First I was using the "leading protein", now I take into account ALL proteins.
+A peptide is 'Contam' if it maps to at least 1 contaminant.
+A peptide is 'Canon' if it maps to at least 1 canonical protein (Uniprot) and no contaminants.
+A peptide is 'NonCanon' if it maps to no canonical proteins and no contaminants.
+
+2024/12/13 -- IMPORTANT!
+Up to now, I have been working with PSM-level qvalue only!
+The ionbot.first.peptides table is non-redundant and only reports the highest score for each peptide IGNORING MODIFCATIONS
