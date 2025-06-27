@@ -3,11 +3,7 @@
 # Learn more about .gitignore:
 #     https://www.atlassian.com/git/tutorials/saving-changes/gitignore
 
-Compare-searches-*
-combine-ionbot-results - Copia.ipynb
 test-publication-data/
-combined-FDR/
-protein-inference/
 tpp_pride_reanalysis*/
 .Rhistory
 .ipynb_checkpoints/
