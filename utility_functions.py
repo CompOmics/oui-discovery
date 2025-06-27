@@ -29,20 +29,32 @@ def import_pep_IDs(PATH, filtering=False, drop_contaminants=True):
                                      'group_qval',
                                     'custom_q']
                     )
+    df.rename(columns={'q.value':'global_q'}, inplace=True)
+    if drop_contaminants:
+        df = df[df.isCanonical!='Contam'].copy(deep=True)
 
     if filtering=='global':
-        df = df[df['q.value']<0.01].copy(deep=True)
+        df = df[df.global_q<0.01].copy(deep=True)
     elif filtering=='groupwalk':
         df = df[df.group_qval<0.01].copy(deep=True)
     elif filtering=='custom':
         df = df[df.custom_q<0.01].copy(deep=True)
+    elif filtering=='hybrid':
+        df['hybrid_q'] = df.apply(lambda row: row.custom_q if row.isCanonical=="NonCanonical" else row.global_q, axis=1)
+        df = df[df.hybrid_q<0.01].copy(deep=True)
+    # elif filtering=='hybrid':
+    #     tmp = []
+    #     for pippo,pluto in df.groupby('isCanonical').__iter__():
+    #         if pippo=='Canonical':
+    #             tmp.append(pluto[pluto['q.value']<0.01])
+    #         elif pippo=='NonCanonical':
+    #             tmp.append(pluto[pluto.custom_q<0.01])
+    #     df = pd.concat(tmp, ignore_index=True)
+    #     del tmp
     elif filtering: 
         # gives error if filtering is not False
         print(f'Error! Filtering = {filtering}')
         return filtering
-
-    if drop_contaminants:
-        df = df[df.isCanonical!='Contam'].copy(deep=True)
 
     # fixes issue with some files being .RAW and other being .raw
     df.spectrum_file = df.spectrum_file.apply(lambda x: x.split('.')[0])
@@ -207,7 +219,7 @@ import time
 def autosave(FLD='publication-data', extra_labels=''):
     app = JupyterFrontEnd()
     app.commands.execute('docmanager:save')
-    time.sleep(5) 
+    time.sleep(9) 
     
     nbname = os.path.split(os.environ.get("JPY_SESSION_NAME"))[-1]
     
