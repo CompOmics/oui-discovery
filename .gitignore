@@ -55,4 +55,5 @@ Thumbs.db
 *.flv
 *.mov
 *.wmv
-
+#Current data on vv workplace
+oui-discovery-vv-data/**
