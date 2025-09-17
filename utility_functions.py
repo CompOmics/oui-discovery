@@ -21,7 +21,11 @@ def cohenD(X,Y):
     return round(abs(mx-my)/sdp, 3)
 
 # Importing and filtering results
-def import_pep_IDs(PATH, filtering=False, drop_contaminants=True):
+def import_pep_IDs(
+    PATH, filtering=False, drop_contaminants=True, 
+    sample_specific_filters=None, 
+    search='OpenSearch'
+    ):
     df = pd.read_csv(PATH, usecols=['spectrum_title','scan','spectrum_file','matched_peptide','database_peptide',
                                      'modifications','leadprot','database','precursor_mass',
                                      'isCanonical','isModified', 'psm_score',
@@ -39,18 +43,10 @@ def import_pep_IDs(PATH, filtering=False, drop_contaminants=True):
         df = df[df.group_qval<0.01].copy(deep=True)
     elif filtering=='custom':
         df = df[df.custom_q<0.01].copy(deep=True)
-    elif filtering=='hybrid':
-        df['hybrid_q'] = df.apply(lambda row: row.custom_q if row.isCanonical=="NonCanonical" else row.global_q, axis=1)
-        df = df[df.hybrid_q<0.01].copy(deep=True)
-    # elif filtering=='hybrid':
-    #     tmp = []
-    #     for pippo,pluto in df.groupby('isCanonical').__iter__():
-    #         if pippo=='Canonical':
-    #             tmp.append(pluto[pluto['q.value']<0.01])
-    #         elif pippo=='NonCanonical':
-    #             tmp.append(pluto[pluto.custom_q<0.01])
-    #     df = pd.concat(tmp, ignore_index=True)
-    #     del tmp
+    elif filtering=='hybrid' and sample_specific_filters is not None:
+        df = apply_hybrid_filtering(df, sample_specific_filters, search=search)
+        # df['hybrid_q'] = df.apply(lambda row: row.custom_q if row.isCanonical=="NonCanonical" else row.global_q, axis=1)
+        # df = df[df.hybrid_q<0.01].copy(deep=True)
     elif filtering: 
         # gives error if filtering is not False
         print(f'Error! Filtering = {filtering}')
@@ -68,6 +64,18 @@ def import_pep_IDs(PATH, filtering=False, drop_contaminants=True):
     
     return df
 
+def apply_hybrid_filtering(tmp, filters, search):
+    iterator = tmp.groupby(['spectrum_file','isCanonical'])
+    output = []
+    for (i,j),df in iterator.__iter__():
+        if j=='Canonical':
+            df = df[ df.global_q<0.01 ]
+            output.append(df)
+        elif j=='NonCanonical':
+            df = df[ df.group_qval<filters[(i,j,search)] ]
+            output.append(df)
+    return pd.concat(output)    
+    
 
 # FDR recalculation
 def process_proteins(protein_str):
