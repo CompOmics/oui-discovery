@@ -26,16 +26,22 @@ def import_pep_IDs(
     sample_specific_filters=None, 
     search='OpenSearch'
     ):
-    df = pd.read_csv(PATH, usecols=['spectrum_title','scan','spectrum_file','matched_peptide','database_peptide',
-                                     'modifications','leadprot','database','precursor_mass',
-                                     'isCanonical','isModified', 'psm_score',
-                                     'q.value',
-                                     'group_qval',
-                                    'custom_q']
+    df = pd.read_csv(PATH, 
+                     usecols=[
+                         'ionbot_match_id','spectrum_title','scan','spectrum_file','charge',
+                         'matched_peptide','database_peptide',
+                         'modifications','leadprot','proteins','database','precursor_mass','isCanonical','isModified',
+                         'psm_score','q.value','group_qval','custom_q']
                     )
     df.rename(columns={'q.value':'global_q'}, inplace=True)
+    # drop contaminants
     if drop_contaminants:
         df = df[df.isCanonical!='Contam'].copy(deep=True)
+    # fixes issue with some files being .RAW and other being .raw
+    df.spectrum_file = df.spectrum_file.apply(lambda x: x.split('.')[0])
+    # in some mgf files the 'spectrum title' includes the file name, making the spectrum title unique.
+    # when the file name is NOT included, spectrum titles are NOT unique, and this can mess up some analysis.
+    df.spectrum_title = df.spectrum_file + ':' + df.spectrum_title.apply(lambda x: x.split(':')[-1])
 
     if filtering=='global':
         df = df[df.global_q<0.01].copy(deep=True)
@@ -51,12 +57,6 @@ def import_pep_IDs(
         # gives error if filtering is not False
         print(f'Error! Filtering = {filtering}')
         return filtering
-
-    # fixes issue with some files being .RAW and other being .raw
-    df.spectrum_file = df.spectrum_file.apply(lambda x: x.split('.')[0])
-    # in some mgf files the 'spectrum title' includes the file name, making the spectrum title unique.
-    # when the file name is NOT included, spectrum titles are NOT unique, and this can mess up some analysis.
-    df.spectrum_title = df.spectrum_file + ':' + df.spectrum_title.apply(lambda x: x.split(':')[-1])
     
     df['modified_peptide'] = df.matched_peptide + '|' + df.modifications
     # to remove retention times in parentheses
@@ -228,9 +228,7 @@ def autosave(FLD='publication-data', extra_labels=''):
     app = JupyterFrontEnd()
     app.commands.execute('docmanager:save')
     time.sleep(9) 
-    
     nbname = os.path.split(os.environ.get("JPY_SESSION_NAME"))[-1]
-    
     command = ['jupyter', 'nbconvert', nbname, '--to', 'html', '--output', 
                os.path.join(FLD, f'{DATE}-{nbname.replace('.ipynb','')}{extra_labels}.html')]
     _ = subprocess.run(command)
