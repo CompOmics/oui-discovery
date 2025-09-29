@@ -21,17 +21,27 @@ def cohenD(X,Y):
     return round(abs(mx-my)/sdp, 3)
 
 # Importing and filtering results
-def import_pep_IDs(PATH, filtering=False, drop_contaminants=True):
-    df = pd.read_csv(PATH, usecols=['spectrum_title','scan','spectrum_file','matched_peptide','database_peptide',
-                                     'modifications','leadprot','database','precursor_mass',
-                                     'isCanonical','isModified', 'psm_score',
-                                     'q.value',
-                                     'group_qval',
-                                    'custom_q']
+def import_pep_IDs(
+    PATH, filtering=False, drop_contaminants=True, 
+    sample_specific_filters=None, 
+    search='OpenSearch'
+    ):
+    df = pd.read_csv(PATH, 
+                     usecols=[
+                         'ionbot_match_id','spectrum_title','scan','spectrum_file','charge',
+                         'matched_peptide','database_peptide',
+                         'modifications','leadprot','proteins','database','precursor_mass','isCanonical','isModified',
+                         'psm_score','q.value','group_qval','custom_q']
                     )
     df.rename(columns={'q.value':'global_q'}, inplace=True)
+    # drop contaminants
     if drop_contaminants:
         df = df[df.isCanonical!='Contam'].copy(deep=True)
+    # fixes issue with some files being .RAW and other being .raw
+    df.spectrum_file = df.spectrum_file.apply(lambda x: x.split('.')[0])
+    # in some mgf files the 'spectrum title' includes the file name, making the spectrum title unique.
+    # when the file name is NOT included, spectrum titles are NOT unique, and this can mess up some analysis.
+    df.spectrum_title = df.spectrum_file + ':' + df.spectrum_title.apply(lambda x: x.split(':')[-1])
 
     if filtering=='global':
         df = df[df.global_q<0.01].copy(deep=True)
@@ -39,28 +49,14 @@ def import_pep_IDs(PATH, filtering=False, drop_contaminants=True):
         df = df[df.group_qval<0.01].copy(deep=True)
     elif filtering=='custom':
         df = df[df.custom_q<0.01].copy(deep=True)
-    elif filtering=='hybrid':
-        df['hybrid_q'] = df.apply(lambda row: row.custom_q if row.isCanonical=="NonCanonical" else row.global_q, axis=1)
-        df = df[df.hybrid_q<0.01].copy(deep=True)
-    # elif filtering=='hybrid':
-    #     tmp = []
-    #     for pippo,pluto in df.groupby('isCanonical').__iter__():
-    #         if pippo=='Canonical':
-    #             tmp.append(pluto[pluto['q.value']<0.01])
-    #         elif pippo=='NonCanonical':
-    #             tmp.append(pluto[pluto.custom_q<0.01])
-    #     df = pd.concat(tmp, ignore_index=True)
-    #     del tmp
+    elif filtering=='hybrid' and sample_specific_filters is not None:
+        df = apply_hybrid_filtering(df, sample_specific_filters, search=search)
+        # df['hybrid_q'] = df.apply(lambda row: row.custom_q if row.isCanonical=="NonCanonical" else row.global_q, axis=1)
+        # df = df[df.hybrid_q<0.01].copy(deep=True)
     elif filtering: 
         # gives error if filtering is not False
         print(f'Error! Filtering = {filtering}')
         return filtering
-
-    # fixes issue with some files being .RAW and other being .raw
-    df.spectrum_file = df.spectrum_file.apply(lambda x: x.split('.')[0])
-    # in some mgf files the 'spectrum title' includes the file name, making the spectrum title unique.
-    # when the file name is NOT included, spectrum titles are NOT unique, and this can mess up some analysis.
-    df.spectrum_title = df.spectrum_file + ':' + df.spectrum_title.apply(lambda x: x.split(':')[-1])
     
     df['modified_peptide'] = df.matched_peptide + '|' + df.modifications
     # to remove retention times in parentheses
@@ -68,6 +64,18 @@ def import_pep_IDs(PATH, filtering=False, drop_contaminants=True):
     
     return df
 
+def apply_hybrid_filtering(tmp, filters, search):
+    iterator = tmp.groupby(['spectrum_file','isCanonical'])
+    output = []
+    for (i,j),df in iterator.__iter__():
+        if j=='Canonical':
+            df = df[ df.global_q<0.01 ]
+            output.append(df)
+        elif j=='NonCanonical':
+            df = df[ df.group_qval<filters[(i,j,search)] ]
+            output.append(df)
+    return pd.concat(output)    
+    
 
 # FDR recalculation
 def process_proteins(protein_str):
@@ -220,9 +228,7 @@ def autosave(FLD='publication-data', extra_labels=''):
     app = JupyterFrontEnd()
     app.commands.execute('docmanager:save')
     time.sleep(9) 
-    
     nbname = os.path.split(os.environ.get("JPY_SESSION_NAME"))[-1]
-    
     command = ['jupyter', 'nbconvert', nbname, '--to', 'html', '--output', 
                os.path.join(FLD, f'{DATE}-{nbname.replace('.ipynb','')}{extra_labels}.html')]
     _ = subprocess.run(command)

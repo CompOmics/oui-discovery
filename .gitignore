@@ -10,6 +10,7 @@ tpp_pride_reanalysis*/
 __pycache__/
 .virtual_documents/
 *.bak
+test-hybrid-filters*
 
 # Node artifact files
 node_modules/
