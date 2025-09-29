@@ -1,13 +1,20 @@
 from explore_import import  *
 
 def list_files(startpath):
+    paths={}
     for root, dirs, files in os.walk(startpath):
+        paths[root]=[]
         level = root.replace(startpath, '').count(os.sep)
         indent = ' ' * 4 * (level)
         print('{}{}/'.format(indent, os.path.basename(root)))
         subindent = ' ' * 4 * (level + 1)
         for f in files:
+            paths[root].append(f)
             print('{}{}'.format(subindent, f))
+    for k,v in list(paths.items()):
+        if len(v)==0:
+            del paths[k]
+    return paths
             
 def get_total_nspectra(mgf_path):
     mgfFiles={file.split("/")[-1]:np.nan for file in glob.glob(f"{mgf_path}*.mgf")}
