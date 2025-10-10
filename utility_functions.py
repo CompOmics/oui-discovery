@@ -14,6 +14,9 @@ project_palette = {
     "openprot":"cornflowerblue"
 }
 
+def parse_sample_fld_name(sample_fld_name):
+    return re.match('^(.*)-(\\w+)$', sample_fld_name).groups()
+
 def cohenD(X,Y):
     nx,mx,sdx = len(X),np.mean(X),np.std(X)
     ny,my,sdy = len(Y),np.mean(Y),np.std(Y)
