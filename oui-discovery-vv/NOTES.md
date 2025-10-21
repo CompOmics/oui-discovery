@@ -18,6 +18,7 @@
 - T 2
 - T 3
 #### Figures
+*CHECK ALL COMMENTS BEFORE ASSAMBLING INTO FIGURES*
 - F 1
  - A (by search engine and database size)
  - B (by search engine and subset) - DONE
