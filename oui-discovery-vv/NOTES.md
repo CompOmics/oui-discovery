@@ -24,29 +24,29 @@
  - B (by search engine and subset) - DONE
  - C (n of identifications difference ?)
 - F 2
-  - A
-  - B
-  - C
-  - D
+  - A - DONE
+  - B - DONE
+  - C - DONE
+  - D - DONE
 - F 3
-  - A
-  - B
-  - C
-  - D
-  - E
-  - F
+  - A - DONE
+  - B - DONE
+  - C - DONE
+  - D - DONE
+  - E - DONE
+  - F - DONE
 - F 4
-  - A
-  - B
-  - C
-  - D
+  - A - DONE
+  - B - DONE
+  - C - DONE
+  - D - DONE
 - F 5
-  - A
-  - B
-  - C
-  - D
-  - E
-  - F
+  - A - DONE
+  - B - DONE
+  - C - DONE
+  - D - DONE
+  - E - DONE
+  - F - DONE
 - F 6
   - A
   - B
@@ -74,3 +74,5 @@
   - D
   - E
   - F
+- F S 1
+- F S 2
