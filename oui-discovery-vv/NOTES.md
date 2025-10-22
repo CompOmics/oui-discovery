@@ -66,9 +66,9 @@
   - D - DONE
 - F 9?
 - F 10
-  - A
+  - A - DONE
   - B
-  - C
+  - C - (almost) DONE
 - F 11
   - A
   - B
