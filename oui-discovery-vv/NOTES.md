@@ -22,7 +22,7 @@
 - F 1
  - A (by search engine and database size)
  - B (by search engine and subset) - DONE
- - C (n of identifications difference ?)
+ - C (n of identifications difference ?) (venn diagram of peptides retained with different filtering, non-entrapment)
 - F 2
   - A - DONE
   - B - DONE
@@ -47,12 +47,14 @@
   - D - DONE
   - E - DONE
   - F - DONE
-- F 6
+- F 6 https://github.com/CompOmics/oui-discovery/tree/main/publication-data/Final-figures
+- - have to redo, something does not match
   - A
   - B
   - C
   - D
-- F 7
+- F 7 https://github.com/CompOmics/oui-discovery/tree/main/publication-data/Final-figures
+- - have to redo, something does not match
   - A
   - B
   - C
