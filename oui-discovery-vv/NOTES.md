@@ -48,13 +48,11 @@
   - E - DONE
   - F - DONE
 - F 6 https://github.com/CompOmics/oui-discovery/tree/main/publication-data/Final-figures
-- - have to redo, something does not match
   - A
   - B
   - C
   - D
 - F 7 https://github.com/CompOmics/oui-discovery/tree/main/publication-data/Final-figures
-- - have to redo, something does not match
   - A
   - B
   - C
@@ -64,11 +62,16 @@
   - B - DONE
   - C - DONE
   - D - DONE
-- F 9?
-- F 10
-  - A - DONE
-  - B
-  - C - (almost) DONE
+~~- F 9 - DONE~~
+~~- F 10~~
+~~- A - DONE~~
+~~- B - REMOVE~~
+~~- C - DONE~~
+- F 9
+- - A (peptide length) - DONE
+  - B (aa frquency) - DONE
+  - B (pepide position distribution) - DONE
+  - C (modifications by peptide position) - DONE (almost)
 - F 11
   - A
   - B
