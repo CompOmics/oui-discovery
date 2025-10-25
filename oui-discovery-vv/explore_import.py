@@ -8,7 +8,7 @@ import itertools
 from itertools import chain
 import matplotlib.pyplot as plt
 import re
-from matplotlib_venn import venn2, venn3
+#from matplotlib_venn import venn2, venn3
 import os
 import copy
 import glob
@@ -21,7 +21,7 @@ import matplotlib.patches as mpatches
 import plotly.graph_objects as go
 import textwrap
 from mpl_toolkits.axes_grid1 import make_axes_locatable
-from scipy import stats
+#from scipy import stats
 import regex
 from pyteomics import mass
 import  pyteomics
@@ -33,7 +33,7 @@ from copy import deepcopy
 import numpy as np
 import matplotlib.pyplot as plt
 from collections import Counter
-from matplotlib_venn import venn3
+#from matplotlib_venn import venn3
 import copy
 import matplotlib
 import matplotlib.backends.backend_pdf
@@ -44,4 +44,3 @@ from matplotlib.collections import PolyCollection
 from matplotlib.legend_handler import HandlerTuple
 import plotly.express as px
 from matplotlib.colors import LinearSegmentedColormap
-from scipy import stats

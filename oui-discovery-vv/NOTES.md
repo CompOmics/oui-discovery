@@ -72,7 +72,8 @@
   - B (aa frquency) - DONE
   - B (pepide position distribution) - DONE
   - C (modifications by peptide position) - DONE (almost)
-- F 11
+~~- F 11~~
+- F 10
   - A
   - B
   - C
