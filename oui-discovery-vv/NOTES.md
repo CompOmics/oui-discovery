@@ -19,10 +19,9 @@
 - T 3
 #### Figures
 *CHECK ALL COMMENTS BEFORE ASSAMBLING INTO FIGURES*
-- F 1
+- F 1 - DONE
  - A (by search engine and database size)
  - B (by search engine and subset) - DONE
- - C (n of identifications difference ?) (venn diagram of peptides retained with different filtering, non-entrapment)
 - F 2
   - A - DONE
   - B - DONE
@@ -40,13 +39,12 @@
   - B - DONE
   - C - DONE
   - D - DONE
-- F 5
+- F 5 - DONE
   - A - DONE
   - B - DONE
   - C - DONE
-  - D - DONE
+  - D - DONE + E - DONE
   - E - DONE
-  - F - DONE
 - F 6 https://github.com/CompOmics/oui-discovery/tree/main/publication-data/Final-figures
   - A
   - B
@@ -57,7 +55,7 @@
   - B
   - C
   - D
-- F 8
+- F 8 - DONE
   - A - DONE
   - B - DONE
   - C - DONE
@@ -80,5 +78,5 @@
   - D
   - E
   - F
-- F S 1
-- F S 2
+- F S 1 (FDR ranks entr/non-entr correlation) - DONE
+- F S 2 (UpsetPlot non-canonical - filters outcome) - DONE
