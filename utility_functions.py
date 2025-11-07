@@ -206,7 +206,7 @@ def make_sankey_plot_with_counts(data, suffixes=['_trembl','_open']):
           pad = 15,
           thickness = 20,
           line = dict(color = "black", width = 0.5),
-          label = leftLabels+rightLabels,
+          label = labels,
           color = list(labels_colors.values())
         ),
         link = dict(
