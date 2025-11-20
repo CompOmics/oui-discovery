@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8" standalone="no"?>
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
   "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<svg xmlns:xlink="http://www.w3.org/1999/xlink" width="549.89204pt" height="347.04pt" viewBox="0 0 549.89204 347.04" xmlns="http://www.w3.org/2000/svg" version="1.1">
+<svg xmlns:xlink="http://www.w3.org/1999/xlink" width="549.892049pt" height="347.04pt" viewBox="0 0 549.892049 347.04" xmlns="http://www.w3.org/2000/svg" version="1.1">
  <metadata>
   <rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
    <cc:Work>
     <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
-    <dc:date>2025-10-26T21:01:48.717715</dc:date>
+    <dc:date>2025-11-19T13:48:55.279854</dc:date>
     <dc:format>image/svg+xml</dc:format>
     <dc:creator>
      <cc:Agent>
-      <dc:title>Matplotlib v3.10.1, https://matplotlib.org/</dc:title>
+      <dc:title>Matplotlib v3.10.7, https://matplotlib.org/</dc:title>
      </cc:Agent>
     </dc:creator>
    </cc:Work>
@@ -22,46 +22,46 @@
  <g id="figure_1">
   <g id="patch_1">
    <path d="M 0 347.04 
-L 549.89204 347.04 
-L 549.89204 -0 
+L 549.892049 347.04 
+L 549.892049 -0 
 L 0 -0 
 z
 " style="fill: #ffffff"/>
   </g>
   <g id="axes_1">
    <g id="patch_2">
-    <path d="M 327.591294 58.290124 
-C 297.860327 41.124942 262.610004 36.115194 229.273854 44.317327 
-C 195.937704 52.51946 167.036187 73.313333 148.664006 102.313968 
-C 130.291824 131.314603 123.838051 166.329337 130.663647 199.974324 
-C 137.489244 233.61931 157.078144 263.350738 185.299474 282.898895 
-L 261.063294 173.52 
+    <path d="M 327.59128 58.290124 
+C 297.860313 41.124942 262.60999 36.115194 229.27384 44.317327 
+C 195.93769 52.519461 167.036173 73.313333 148.663991 102.313968 
+C 130.29181 131.314603 123.838037 166.329338 130.663634 199.974324 
+C 137.48923 233.619311 157.07813 263.350739 185.29946 282.898895 
+L 261.06328 173.52 
 z
 " style="fill: #b22222"/>
    </g>
    <g id="patch_3">
-    <path d="M 185.299485 282.898904 
-C 208.309193 298.837105 235.771799 307.115323 263.75665 306.548734 
-C 291.741501 305.982137 318.846589 296.599086 341.19231 279.74259 
-C 363.538031 262.886094 380.004928 239.40066 388.236101 212.647703 
-C 396.467274 185.894747 396.050354 157.214616 387.045013 130.712224 
-L 261.063294 173.52 
+    <path d="M 185.29946 282.898895 
+C 208.309169 298.837102 235.771795 307.115333 263.75665 306.548737 
+C 291.741504 305.982141 318.846551 296.599104 341.192281 279.742607 
+C 363.538011 262.886111 380.004907 239.400662 388.236084 212.647703 
+C 396.467261 185.894743 396.050338 157.214591 387.04499 130.712198 
+L 261.06328 173.52 
 z
 " style="fill: #fa8072"/>
    </g>
    <g id="patch_4">
-    <path d="M 387.045013 130.712224 
-C 383.103284 119.11186 377.578157 108.111347 370.626398 98.022807 
-C 363.674638 87.934267 355.362612 78.854044 345.926273 71.039886 
-L 261.063294 173.52 
+    <path d="M 387.04499 130.712198 
+C 383.103263 119.111846 377.578122 108.111315 370.626365 98.022785 
+C 363.674608 87.934254 355.362623 78.854069 345.926292 71.039912 
+L 261.06328 173.52 
 z
 " style="fill: #4169e1"/>
    </g>
    <g id="patch_5">
-    <path d="M 345.926273 71.039886 
-C 343.055744 68.662825 340.086636 66.407437 337.026752 64.279655 
-C 333.966868 62.151873 330.818898 60.153584 327.591243 58.290094 
-L 261.063294 173.52 
+    <path d="M 345.926292 71.039912 
+C 343.055767 68.662851 340.086634 66.407447 337.026751 64.279668 
+C 333.966868 62.151888 330.818934 60.153611 327.59128 58.290124 
+L 261.06328 173.52 
 z
 " style="fill: #87ceeb"/>
    </g>
@@ -69,7 +69,7 @@ z
    <g id="matplotlib.axis_2"/>
    <g id="text_1">
     <!-- Canonical proteins -->
-    <g transform="translate(7.2 91.218043) scale(0.14 -0.14)">
+    <g transform="translate(7.2 91.218021) scale(0.14 -0.14)">
      <defs>
       <path id="DejaVuSans-43" d="M 4122 4306 
 L 4122 3641 
@@ -348,7 +348,7 @@ z
      <use xlink:href="#DejaVuSans-73" transform="translate(878.072266 0)"/>
     </g>
     <!--  with 1 peptide -->
-    <g transform="translate(32.19875 106.894981) scale(0.14 -0.14)">
+    <g transform="translate(32.19875 106.894959) scale(0.14 -0.14)">
      <defs>
       <path id="DejaVuSans-77" d="M 269 3500 
 L 844 3500 
@@ -445,7 +445,7 @@ z
    </g>
    <g id="text_2">
     <!-- 48.7% (1675) -->
-    <g transform="translate(145.884807 134.659518) scale(0.14 -0.14)">
+    <g transform="translate(145.884801 134.659506) scale(0.14 -0.14)">
      <defs>
       <path id="DejaVuSans-34" d="M 2419 4116 
 L 825 1625 
@@ -667,7 +667,7 @@ z
    </g>
    <g id="text_3">
     <!-- Canonical proteins -->
-    <g transform="translate(349.205217 286.389508) scale(0.14 -0.14)">
+    <g transform="translate(349.205181 286.389524) scale(0.14 -0.14)">
      <use xlink:href="#DejaVuSans-43"/>
      <use xlink:href="#DejaVuSans-61" transform="translate(69.824219 0)"/>
      <use xlink:href="#DejaVuSans-6e" transform="translate(131.103516 0)"/>
@@ -688,7 +688,7 @@ z
      <use xlink:href="#DejaVuSans-73" transform="translate(878.072266 0)"/>
     </g>
     <!--  with &gt;1 peptide -->
-    <g transform="translate(349.205217 302.066446) scale(0.14 -0.14)">
+    <g transform="translate(349.205181 302.066462) scale(0.14 -0.14)">
      <defs>
       <path id="DejaVuSans-3e" d="M 678 3150 
 L 678 3719 
@@ -721,7 +721,7 @@ z
    </g>
    <g id="text_4">
     <!-- 39.9% (1371) -->
-    <g transform="translate(261.4018 241.116681) scale(0.14 -0.14)">
+    <g transform="translate(261.401775 241.116689) scale(0.14 -0.14)">
      <defs>
       <path id="DejaVuSans-33" d="M 2597 2516 
 Q 3050 2419 3304 2112 
@@ -802,7 +802,7 @@ z
    </g>
    <g id="text_5">
     <!-- Non-canonical proteins -->
-    <g transform="translate(381.582665 86.497686) scale(0.14 -0.14)">
+    <g transform="translate(381.582674 86.497719) scale(0.14 -0.14)">
      <defs>
       <path id="DejaVuSans-4e" d="M 628 4666 
 L 1478 4666 
@@ -849,7 +849,7 @@ z
      <use xlink:href="#DejaVuSans-73" transform="translate(1098.677734 0)"/>
     </g>
     <!--  with 1 peptide -->
-    <g transform="translate(381.582665 102.174623) scale(0.14 -0.14)">
+    <g transform="translate(381.582674 102.174657) scale(0.14 -0.14)">
      <use xlink:href="#DejaVuSans-20"/>
      <use xlink:href="#DejaVuSans-77" transform="translate(31.787109 0)"/>
      <use xlink:href="#DejaVuSans-69" transform="translate(113.574219 0)"/>
@@ -869,7 +869,7 @@ z
    </g>
    <g id="text_6">
     <!-- 8.8% (302) -->
-    <g transform="translate(287.969726 132.084777) scale(0.14 -0.14)">
+    <g transform="translate(287.969725 132.084796) scale(0.14 -0.14)">
      <defs>
       <path id="DejaVuSans-30" d="M 2034 4250 
 Q 1547 4250 1301 3770 
@@ -931,7 +931,7 @@ z
    </g>
    <g id="text_7">
     <!-- Non-canonical proteins -->
-    <g transform="translate(344.623097 49.38028) scale(0.14 -0.14)">
+    <g transform="translate(344.623098 49.380291) scale(0.14 -0.14)">
      <use xlink:href="#DejaVuSans-4e"/>
      <use xlink:href="#DejaVuSans-6f" transform="translate(74.804688 0)"/>
      <use xlink:href="#DejaVuSans-6e" transform="translate(135.986328 0)"/>
@@ -956,7 +956,7 @@ z
      <use xlink:href="#DejaVuSans-73" transform="translate(1098.677734 0)"/>
     </g>
     <!--  with &gt;1 peptide -->
-    <g transform="translate(344.623097 65.057218) scale(0.14 -0.14)">
+    <g transform="translate(344.623098 65.057228) scale(0.14 -0.14)">
      <use xlink:href="#DejaVuSans-20"/>
      <use xlink:href="#DejaVuSans-77" transform="translate(31.787109 0)"/>
      <use xlink:href="#DejaVuSans-69" transform="translate(113.574219 0)"/>
@@ -977,7 +977,7 @@ z
    </g>
    <g id="text_8">
     <!-- 2.7% (92) -->
-    <g transform="translate(272.263712 111.83892) scale(0.14 -0.14)">
+    <g transform="translate(272.263706 111.838926) scale(0.14 -0.14)">
      <use xlink:href="#DejaVuSans-32"/>
      <use xlink:href="#DejaVuSans-2e" transform="translate(63.623047 0)"/>
      <use xlink:href="#DejaVuSans-37" transform="translate(95.410156 0)"/>
