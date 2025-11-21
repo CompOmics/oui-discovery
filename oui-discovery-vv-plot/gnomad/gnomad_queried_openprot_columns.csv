@@ -1,0 +1,38 @@
+,Column name,Description
+0,database_peptide,Peptide from OpenProt database.
+1,peptide_class,unique_to_* - proteotypic to protein of type canonical/non-canonical; shared_in_* - shared between proteins of same type; shared_btw_can_noncan - shared between proteins of both types.
+2,proteins,List of proteins the database_peptide matches to.
+3,isSubstitution,The mass shift of at least one PSM of database_peptide is isobaric to amino acid substitution.
+4,dataset,"List of dataset accessions in PRIDE Archive, where database_peptide was detected."
+5,spectrum_title,List of spectrum titles matched to database_peptide.
+6,scan,List of scan numbers matched to database_peptide.
+7,spectrum_file,"List of MS-run files, where database_peptide was detected."
+8,observed_retention_time,List of observed retention times of spectra matched to database_peptide.
+9,charge,List of precursor charges matched to database_peptide.
+10,modifications_masses,"List of modifications matched to PSMs. First element is position in peptide, second - corresponding residue in peptide, third - monoisotopic mass."
+11,fraction_psm_wsub,Fraction of database_peptide PSMs with mass shift isobaric to amino acid substitution.
+12,modifications_set,The non-redundant set of modifications_masses.
+13,residues_to_sub,Residues inherent to mass shift isobaric to amino acid substitution (according to unimod).
+14,pos_to_sub,Positions on database_peptide that correspond to residues_to_sub.
+15,sub_rule,List of residue pairs that are potential amino acid substitutions. First residue is to be substituted by the second residue in the pair.
+16,peptides_w1sub,database_peptide with one of the pos_to_sub substituted according to sub_rule.
+17,saav_info_pep,"Position in peptide, new residue and reference residue of peptides_w1sub."
+18,proteins_explode,"One of the proteins prom column ""proteins""."
+19,peptide_length,Length of database_peptide (as well as peptides_w1sub).
+20,peptide_position,Peptide start and end position in protein from column proteins_explode. The coordinates are 0-based.
+21,saav_info_prot,"Position in protein, new residue and reference residue of peptides_w1sub."
+22,saav_info_triplet,"Position in genome (codon), new residue and reference residue of peptides_w1sub."
+23,strand,"DNA strand, that encodes the protein from column proteins_explode. 1 - forward, -1 - reverse."
+24,chromosome,"Chromosome, that encodes the protein from column proteins_explode."
+25,gene,"Gene accession, that encodes the protein from column proteins_explode."
+26,saav_info_refcod,Nucleotides on forward strand in genomic position indicated in column saav_info_triplet.
+27,saav_info_refcod_rev,"Nucleotides on reverse strand in genomic position indicated in column saav_info_triplet. If strand column ==1, the values in saav_info_refcod and saav_info_refcod_rev are identical."
+28,is_expected_aa,"The saav_info_refcod or saav_info_refcod_rev (depending on strand) codon encodes the residue in saav_info_pep psosition. If proteins_explode was not found in OpenProt GTF, is_expected_aa == False."
+29,saav_1bp_dist,The codon from is_expected_aa requires one nucleotide substitution to change residue from reference to traget (in saav_info_pep).
+30,saav_exp_mut,"The nucleotide(s), different from reference, expected to be found in gnomAD, stored by position. Empty position means that it is not queried in gnomAD."
+31,saav_gnomad_mut,"The nucleotide(s) found in gnomAD on genomic position of saav_exp_mut (position is taken from saav_info_triplet, or same as saav_pos_mut). the nucleotides correspond to forward strand."
+32,saav_gnomad_exp,The nucleotides queried from gnomAD overlap with saav_info_refcod or saav_info_refcod_rev (depending on strand).
+33,isProteotypic,database_peptide is proteotypic to proteins_explode.
+34,isCanonical,database_peptide is mapped to at least one canonical protein (Canonical) or not (NonCanonical).
+35,saav_pos_mut,Genomic position of saav_exp_mut referenced from saav_info_triplet.
+36,saav_in_gnomad,Genomic position of saav_exp_mut containes any variants in gnomAD (not empty result of query).
