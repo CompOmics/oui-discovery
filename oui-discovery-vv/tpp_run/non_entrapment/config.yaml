@@ -1,0 +1,76 @@
+# Paths
+WD: "/mnt/d/vasv1101/Documents_discC/tpp_pride_reanalysis"  # Working directory
+FD: "/mnt/d/vasv1101/Documents_discC/msfragger_pride_reanalysis/mzXML"  # mzXML files directory
+DBD: "/mnt/d/vasv1101/Documents_discC/msfragger_pride_reanalysis/concatenated-fastas"  # Database directory
+OUD: "/mnt/d/vasv1101/Documents_discC/tpp_pride_reanalysis/tpp_runs/tpp_pride_reanalysis_arch241125"  # Output directory
+
+# Database
+DB:
+  canon: "Human_2023_01_canonical_ionbot_db"
+  trembl: "Human_2023_01_trembl_ionbot_db"
+  openprot: "20241102-openprot-database_ionbot_db"
+
+# Datasets {dataset:[single_files]}
+DS:
+  PXD002057:
+    - "130327_o2_01_hu_C1_2hr"
+    - "130327_o2_02_hu_P1_2hr"
+    - "130327_o2_03_hu_C2_2hr"
+    - "130327_o2_04_hu_P2_2hr"
+    - "130327_o2_05_hu_C3_2hr"
+    - "130327_o2_06_hu_P3_2hr"
+
+  PXD005833:
+    - "AM10"
+    - "AM11"
+    - "AM12"
+    - "AM13"
+    - "AM14"
+    - "AM15"
+    - "AM16"
+    - "AM17"
+    - "AM18"
+    - "AM19"
+    - "AM20"
+    - "AM21"
+    - "AM7"
+    - "AM8"
+    - "AM9"
+
+# Batch datasets {dataset:{batch:[single_files]}}
+DS_BATCH:
+  PXD014258:
+    ESC-HF-Sample-BT474:
+      - "ESC-HF-Sample-BT474_1"
+      - "ESC-HF-Sample-BT474_2"
+      - "ESC-HF-Sample-BT474_3"
+      - "ESC-HF-Sample-BT474_4"
+      - "ESC-HF-Sample-BT474_5"
+
+    ESC-HF-Sample-MCF:
+      - "ESC-HF-Sample-MCF1"
+      - "ESC-HF-Sample-MCF2"
+      - "ESC-HF-Sample-MCF3"
+      - "ESC-HF-Sample-MCF4"
+      - "ESC-HF-Sample-MCF5"
+
+    ESC-HF-SampleHela:
+      - "ESC-HF-SampleHela1"
+      - "ESC-HF-SampleHela2"
+      - "ESC-HF-SampleHela3"
+      - "ESC-HF-SampleHela4"
+      - "ESC-HF-SampleHela5"
+
+# TPP and Comet paths
+TPP: "/usr/local/tpp/bin"
+COMET: "comet"
+COMET_PARAMS: "comet.params_enz2.new"
+
+# PeptideProphet
+PeptideProphet: "xinteract"
+PeptideProphet_PARAMS:
+  - "-eS"
+
+# ProteinProphet
+ProteinProphet: "ProteinProphet"
+

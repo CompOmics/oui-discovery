@@ -1,0 +1,163 @@
+"""
+This pipeline performs a search and post processing of several PRIDE datasets with Comet, PeptideProphet and ProteinProphet. 
+The pipeline accounts for files that has to be rescored individuelly and merged into batches before rescoring. The files are searched against three databases.
+
+snakemake --scheduler greedy --cores <int>
+"""
+
+configfile: "config.yaml"
+
+WD   = config["WD"]
+FD   = config["FD"]
+DBD  = config["DBD"]
+OUD  = config["OUD"]
+
+# Datasets
+DS_DICT = config["DS"]  # list of single-file datasets
+DS_LIST = list(DS_DICT.keys())
+DS_BATCH_DICT = config["DS_BATCH"]  # dict of dataset -> batch list
+BATCH_DS = "|".join(DS_BATCH_DICT.keys())  # e.g., "PXD014258|PXDXXX"
+BATCH_F = "|".join([ _f for _ds in DS_BATCH_DICT for _batch, _files in DS_BATCH_DICT[_ds].items() for _f in _files])
+
+# Databases
+DB_DICT = config["DB"]  # dict DBP -> DB name
+DBP_LIST = list(DB_DICT.keys())  # ["canon", "trembl", "openprot"]
+
+# TPP / Comet paths
+TPP = config["TPP"]
+COMET = f"{TPP}/{config['COMET']}"
+COMET_PARAMS = f"{WD}/{config['COMET_PARAMS']}"
+PeptideProphet = f"{TPP}/{config['PeptideProphet']}"
+PeptideProphet_PARAMS = " ".join(config["PeptideProphet_PARAMS"])
+ProteinProphet = f"{TPP}/{config['ProteinProphet']}"
+
+
+# Rule all
+rule all:
+	input:
+		# target output of datasets with files analysed separetly
+		expand(OUD + "/{ds}/{ds}-{dbp}/{file_single}_{dbp}_ProteinProphet.pep.prot.xml",
+			zip,
+			ds = [_ds for _dbp in DBP_LIST for _ds in DS_DICT for _file_single in DS_DICT[_ds] ],
+			dbp = [_dbp for _dbp in DBP_LIST for _ds in DS_DICT for _file_single in DS_DICT[_ds] ],
+			file_single = [_file_single for _dbp in DBP_LIST for _ds in DS_DICT for _file_single in DS_DICT[_ds] ]
+		),
+		# target output of datasets with files analysed in batches
+		expand(OUD + "/{ds}/{ds}-{dbp}/{file_batch}_{dbp}_ProteinProphet.pep.prot.xml",
+			zip,
+			ds = [_ds for _dbp in DBP_LIST for _ds in DS_BATCH_DICT for _file_batch in DS_BATCH_DICT[_ds] ],
+			dbp = [_dbp for _dbp in DBP_LIST for _ds in DS_BATCH_DICT for _file_batch in DS_BATCH_DICT[_ds] ],
+			file_batch = [_file_batch for _dbp in DBP_LIST for _ds in DS_BATCH_DICT for _file_batch in DS_BATCH_DICT[_ds] ]
+		),
+		# intermediat target output of batch datasets
+		expand(OUD + "/{ds}/{ds}-{dbp}/{file_batch_single}_{dbp}.pep.xml",
+			zip,
+			ds = [_ds for _dbp in DBP_LIST for _ds in DS_BATCH_DICT for _file_batch in DS_BATCH_DICT[_ds] for _file_batch_single in DS_BATCH_DICT[_ds][_file_batch]],
+			dbp = [_dbp for _dbp in DBP_LIST for _ds in DS_BATCH_DICT for _file_batch in DS_BATCH_DICT[_ds] for _file_batch_single in DS_BATCH_DICT[_ds][_file_batch]],
+			file_batch_single = [_file_batch_single for _dbp in DBP_LIST for _ds in DS_BATCH_DICT for _file_batch in DS_BATCH_DICT[_ds] for _file_batch_single in DS_BATCH_DICT[_ds][_file_batch]]
+		)
+
+
+rule comet_single:
+    input:
+        mzxml = f"{FD}/{{ds}}_mzXML/{{file_single}}.mzXML",
+        ##dirs = rules.make_output_dirs.output
+    output:
+        pepxml = f"{OUD}/{{ds}}/{{ds}}-{{dbp}}/{{file_single}}_{{dbp}}.pep.xml"
+    params:
+        db = lambda wildcards: f"{DBD}/{DB_DICT[wildcards.dbp]}/" +
+                               ("concat_maped.fasta" if wildcards.dbp=="trembl" else "concat.fasta")
+    wildcard_constraints:
+        ds = "|".join(DS_LIST)
+    shell:
+        """
+	mkdir -p {OUD}/{wildcards.ds}/{wildcards.ds}-{wildcards.dbp}
+        {COMET} -P{COMET_PARAMS} -D{params.db} -N{wildcards.file_single}_{wildcards.dbp} {input.mzxml}
+        ##mv {FD}/{wildcards.ds}_mzXML/*{wildcards.dbp}.pep.xml* {OUD}/{wildcards.ds}/{wildcards.ds}-{wildcards.dbp}/
+	mv {wildcards.file_single}_{wildcards.dbp}.pep.xml* {OUD}/{wildcards.ds}/{wildcards.ds}-{wildcards.dbp}/
+        """
+
+rule comet_batch_single:
+    input:
+        mzxml = f"{FD}/{{ds}}_mzXML/{{file_batch_single}}_RAW.mzXML",
+        ##dirs = rules.make_output_dirs.output
+    output:
+        pepxml = f"{OUD}/{{ds}}/{{ds}}-{{dbp}}/{{file_batch_single}}_{{dbp}}.pep.xml"
+    params:
+        db = lambda wildcards: f"{DBD}/{DB_DICT[wildcards.dbp]}/" +
+                               ("concat_maped.fasta" if wildcards.dbp=="trembl" else "concat.fasta")
+    wildcard_constraints:
+        ds = BATCH_DS,
+	file_batch_single = BATCH_F
+    shell:
+        """
+	mkdir -p {OUD}/{wildcards.ds}/{wildcards.ds}-{wildcards.dbp}
+        {COMET} -P{COMET_PARAMS} -D{params.db} -N{wildcards.file_batch_single}_{wildcards.dbp} {input.mzxml}
+        ##mv {FD}/{wildcards.ds}_mzXML/*{wildcards.dbp}.pep.xml* {OUD}/{wildcards.ds}/{wildcards.ds}-{wildcards.dbp}/
+	mv {wildcards.file_batch_single}_{wildcards.dbp}.pep.xml* {OUD}/{wildcards.ds}/{wildcards.ds}-{wildcards.dbp}/
+	"""
+
+# Single file mode
+rule peptideprophet_single:
+    input:
+        f"{OUD}/{{ds}}/{{ds}}-{{dbp}}/{{name}}_{{dbp}}.pep.xml"
+    output:
+        f"{OUD}/{{ds}}/{{ds}}-{{dbp}}/{{name}}_{{dbp}}_PeptideProphet.pep.xml"
+    params:
+        db = lambda wc: f"{DBD}/{DB_DICT[wc.dbp]}/" +
+                        ("concat_maped.fasta" if wc.dbp=="trembl" else "concat.fasta")
+    wildcard_constraints:
+        ds = "|".join(DS_LIST)
+    shell:
+        """
+        {PeptideProphet} {PeptideProphet_PARAMS} -D{params.db} -N{output} {input}
+        """
+
+# Batch mode - aggregates individual comet runs
+rule peptideprophet_batch:
+	input:
+		#pepxml = lambda wc: [OUD + f"/{wc.ds}/{wc.ds}-{wc.dbp}/{file_batch_single}_{wc.dbp}.pep.xml"
+		#	for file_batch_single in DS_BATCH_DICT[wc.ds][wc.file_batch]
+		#]
+		#pepxml = lambda wc: [OUD + f"/{wc.ds}/{wc.ds}-{wc.dbp}/{wc.file_batch}{file_batch_single.replace(wc.file_batch,'')}_{wc.dbp}.pep.xml"
+		#	for file_batch_single in DS_BATCH_DICT[wc.ds][wc.file_batch]
+		#]
+		pepxml = lambda wc: expand(
+			OUD + "/{ds}/{ds}-{dbp}/{file_batch_single}_{dbp}.pep.xml",
+			ds=wc.ds,
+			dbp=wc.dbp,
+			file_batch_single=DS_BATCH_DICT[wc.ds][wc.file_batch]
+		)
+	output:
+        	f"{OUD}/{{ds}}/{{ds}}-{{dbp}}/{{file_batch}}_{{dbp}}_PeptideProphet.pep.xml"
+	params:
+        	db = lambda wc: f"{DBD}/{DB_DICT[wc.dbp]}/" +
+                        ("concat_maped.fasta" if wc.dbp=="trembl" else "concat.fasta")
+	wildcard_constraints:
+        	ds = BATCH_DS
+	shell:
+        	"""
+        	{PeptideProphet} {PeptideProphet_PARAMS} -D{params.db} -N{output} {input.pepxml}
+        	"""
+
+rule proteinprophet_single:
+    input:
+        f"{OUD}/{{ds}}/{{ds}}-{{dbp}}/{{name}}_{{dbp}}_PeptideProphet.pep.xml"
+    output:
+        f"{OUD}/{{ds}}/{{ds}}-{{dbp}}/{{name}}_{{dbp}}_ProteinProphet.pep.prot.xml"
+    wildcard_constraints:
+        ds = "|".join(DS_LIST)
+    shell:
+        "{ProteinProphet} {input} {output}"
+
+rule proteinprophet_batch:
+    input:
+        f"{OUD}/{{ds}}/{{ds}}-{{dbp}}/{{file_batch}}_{{dbp}}_PeptideProphet.pep.xml"
+    output:
+        f"{OUD}/{{ds}}/{{ds}}-{{dbp}}/{{file_batch}}_{{dbp}}_ProteinProphet.pep.prot.xml"
+    wildcard_constraints:
+        ds = BATCH_DS
+    shell:
+        "{ProteinProphet} {input} {output}"
+
+

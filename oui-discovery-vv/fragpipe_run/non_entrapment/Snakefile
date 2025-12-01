@@ -1,0 +1,155 @@
+"""
+This pipeline performs a search and post processing of several PRIDE datasets with MSFragger, PeptideProphet, ProteinProphet, PTMProphet and PTMShepherd. 
+The pipeline accounts for files that has to be rescored individuelly and merged into batches before rescoring. The files are searched against three databases.
+The workflows and manifest files can be generated with FragPipe GUI https://fragpipe.nesvilab.org/docs/tutorial_headless.html. Make sure that MS runs and fasta paths are suited to linux format. The difference between single and batch workflows is only in additional option in PeptideProphet command for batch runs.
+The pipeline was designed for FragPipe Linux version 23.0. Adjust for newer versions if relevant https://github.com/Nesvilab/FragPipe/releases. You may need to separetly download and add other tools in TOOLS directory, like MSFragger, IonQuant and diaTracer.
+Adjust dry_run parameter in rules if you want a dry run ("true") or not ("false"). The execution with dry_run will yeild MissingOutputException - this is expected, as it does not generate output files.
+
+snakemake --scheduler greedy --cores <int>
+"""
+
+configfile: "config.yaml"
+
+# FragPipe headless parameters
+FragPipe   = config["FragPipe"]
+THREADS   = config["THREADS"]
+TOOLS   = config["TOOLS"]
+DIANN   = config["DIANN"]
+PYTHON   = config["PYTHON"]
+OUD   = config["OUD"]
+MZXML   = config["MZXML"]
+WORKFLOW_DIR   = config["WORKFLOW_DIR"]
+MANIFEST_DIR = config["MANIFEST_DIR"]
+
+
+# Datasets
+DS_DICT = config["DS"]  # list of single-file datasets
+DS_LIST = list(DS_DICT.keys())
+DS_BATCH_DICT = config["DS_BATCH"]  # dict of dataset -> batch list
+BATCH_DS = "|".join(DS_BATCH_DICT.keys())  # e.g., "PXD014258|PXDXXX"
+BATCH_F = "|".join([ _f for _ds in DS_BATCH_DICT for _batch, _files in DS_BATCH_DICT[_ds].items() for _f in _files])
+
+# Databases
+DBP_LIST = config["DB"]  # dict DBP -> DB name
+
+
+# Rule all
+rule all:
+	input:
+		# target output of datasets with files analysed separetly #fragpipe-files.fp-manifest
+		#expand(OUD + "/{dbp}/{ds}/{file_single}/ptm-shepherd-output/global.profile.tsv",
+		#	zip,
+		#	ds = [_ds for _dbp in DBP_LIST for _ds in DS_DICT for _file_single in DS_DICT[_ds] ],
+		#	dbp = [_dbp for _dbp in DBP_LIST for _ds in DS_DICT for _file_single in DS_DICT[_ds] ],
+		#	file_single = [_file_single for _dbp in DBP_LIST for _ds in DS_DICT for _file_single in DS_DICT[_ds] ]
+		#),
+		expand(OUD + "/{dbp}/{ds}/fragpipe_headless_run.done",
+			ds = [_ds for _ds in DS_DICT],
+			dbp = [_dbp for _dbp in DBP_LIST],
+		),
+		# target output of datasets with files analysed in batches. Use psm file as ptmshepherd file is created for all batches jointly
+		#expand(OUD + "/{dbp}/{ds}/{file_batch}/psm.tsv",
+		#	zip,
+		#	ds = [_ds for _dbp in DBP_LIST for _ds in DS_BATCH_DICT for _file_batch in DS_BATCH_DICT[_ds] ],
+		#	dbp = [_dbp for _dbp in DBP_LIST for _ds in DS_BATCH_DICT for _file_batch in DS_BATCH_DICT[_ds] ],
+		#	file_batch = [_file_batch.replace("-", "_") for _dbp in DBP_LIST for _ds in DS_BATCH_DICT for _file_batch in DS_BATCH_DICT[_ds] ]
+		#),
+		expand(OUD + "/{dbp}/{ds}/fragpipe_headless_run.done",
+			ds = [_ds for _ds in DS_BATCH_DICT],
+			dbp = [_dbp for _dbp in DBP_LIST],
+		),
+
+
+rule run_fragpipe_headless_single:
+    input:
+        manifest = f"{MANIFEST_DIR}/{{ds}}_manifest_linux.fp-manifest",
+        workflow = f"{WORKFLOW_DIR}/Open_OUIdiscovery_{{dbp}}.workflow",
+    output:
+        #tsv = f"{OUD}/{{dbp}}/{{ds}}/{{file_single}}/ptm-shepherd-output/global.profile.tsv",
+        done = f"{OUD}/{{dbp}}/{{ds}}/fragpipe_headless_run.done"
+    params:
+        dry_run = "false",
+        work_dir = f"{OUD}/{{dbp}}/{{ds}}",
+	threads = THREADS
+    wildcard_constraints:
+        ds="|".join(DS_LIST)
+    shell:
+        """
+        dry_run={params.dry_run}
+
+        if [[ "$dry_run" == "true" ]]; then
+            echo "Execute dry run ..."
+
+            {FragPipe} --headless \
+                --threads {params.threads} \
+                --workflow {input.workflow} \
+                --config-tools-folder {TOOLS} \
+                --config-diann {DIANN} \
+                --config-python {PYTHON} \
+                --manifest {input.manifest} \
+                --workdir {params.work_dir} \
+                --dry-run
+        else
+            echo "Execute full run ..."
+
+            {FragPipe} --headless \
+                --threads {params.threads} \
+                --workflow {input.workflow} \
+                --config-tools-folder {TOOLS} \
+                --config-diann {DIANN} \
+                --config-python {PYTHON} \
+                --manifest {input.manifest} \
+                --workdir {params.work_dir}
+        fi
+
+        # Create marker file so Snakemake knows the job is done
+        touch {output.done}
+        """
+
+rule run_fragpipe_headless_batch:
+    input:
+        manifest = f"{MANIFEST_DIR}/{{ds}}_manifest_linux_batch.fp-manifest",
+        workflow = f"{WORKFLOW_DIR}/Open_OUIdiscovery_{{dbp}}_batch.workflow",
+    output:
+        #tsv = f"{OUD}/{{dbp}}/{{ds}}/{{file_batch}}/ptm-shepherd-output/global.profile.tsv",
+        done = f"{OUD}/{{dbp}}/{{ds}}/fragpipe_headless_run.done"
+    params:
+        dry_run = "false",
+        work_dir = f"{OUD}/{{dbp}}/{{ds}}",
+	threads = THREADS
+    wildcard_constraints:
+        ds=BATCH_DS,
+    shell:
+        """
+        dry_run={params.dry_run}
+
+        if [[ "$dry_run" == "true" ]]; then
+            echo "Execute dry run ..."
+
+            {FragPipe} --headless \
+                --threads {params.threads} \
+                --workflow {input.workflow} \
+                --config-tools-folder {TOOLS} \
+                --config-diann {DIANN} \
+                --config-python {PYTHON} \
+                --manifest {input.manifest} \
+                --workdir {params.work_dir} \
+                --dry-run
+        else
+            echo "Execute full run ..."
+
+            {FragPipe} --headless \
+                --threads {params.threads} \
+                --workflow {input.workflow} \
+                --config-tools-folder {TOOLS} \
+                --config-diann {DIANN} \
+                --config-python {PYTHON} \
+                --manifest {input.manifest} \
+                --workdir {params.work_dir}
+        fi
+
+        # Create marker file so Snakemake knows the job is done
+        touch {output.done}
+        """
+
+
