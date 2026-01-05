@@ -60,3 +60,4 @@ Thumbs.db
 oui-discovery-vv-data/**
 oui-discovery-vv-plot/gnomad/gnomad_queried_openprot.csv
 oui-discovery-vv-test/**
+oui-discovery-vv-junk/**
