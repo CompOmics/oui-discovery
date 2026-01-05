@@ -28,3 +28,9 @@ Panels for figures 1-5 & 8-10: oui-discovery-vv-plot/
 
 **f10** oui-discovery-vv/: explore-1-ionbot-1-preprocess.ipynb → explore-1-ionbot-open-2-stats.ipynb → explore-3-ionbot-open-noncanon-hpp.ipynb & explore-3-ionbot-open-noncanon-spectra.ipynb
 
+**fs1-2** oui-discovery-vv/: plot-0-fdr-vs-ranks.ipynb
+
+**fs3**: see f2-5
+
+**fs4**: see f10
+
